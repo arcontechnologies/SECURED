@@ -17,7 +17,7 @@ namespace Rally
     public class Helpers
     {
         private const int DEFAULT_COMMAND_TIMEOUT = 0;
-        private static readonly HashSet<string> ValidColumnTypes = new HashSet<string> 
+        private static readonly HashSet<string> ValidColumnTypes = new HashSet<string>
         {
             "String", "Int32", "DateTime", "Decimal", "Boolean"
         };
@@ -32,7 +32,7 @@ namespace Rally
 
             public static string GetSanitizedTableName(string tableName)
             {
-                string upperTableName = tableName?.ToUpper() ?? 
+                string upperTableName = tableName?.ToUpper() ??
                     throw new ArgumentNullException(nameof(tableName));
 
                 if (!ValidTables.Contains(upperTableName))
@@ -68,7 +68,7 @@ namespace Rally
         public static DataTable GetSQLTable(string dbserver, string database, string tableName)
         {
             DataTable sqlTable = new DataTable();
-            
+
             using (var connection = new SqlConnection(GetConnectionString(dbserver, database)))
             {
                 try
@@ -151,7 +151,7 @@ namespace Rally
             return Tuple.Create(false, string.Empty);
         }
 
-        public static DataTable CompareRows(DataTable sqlTable, DataTable agTable, 
+        public static DataTable CompareRows(DataTable sqlTable, DataTable agTable,
             DataTable resultTable, string[] listMappedColumn)
         {
             try
@@ -172,7 +172,7 @@ namespace Rally
 
                     if (!isFound)
                     {
-                        var mappedColumn = GetMappedColumn(listMappedColumn, 
+                        var mappedColumn = GetMappedColumn(listMappedColumn,
                             agTable.Rows[i]["COLUMN_NAME"].ToString());
 
                         if (mappedColumn.Item1)
@@ -208,7 +208,7 @@ namespace Rally
                     MultipleActiveResultSets = true,
                     ApplicationName = "RallyLoad"
                 };
-                
+
                 return builder.ConnectionString;
             }
             catch (Exception e)
@@ -261,7 +261,7 @@ namespace Rally
             {
                 command.Parameters.AddWithValue("@Category", category);
                 command.Parameters.AddWithValue("@Key", key);
-                
+
                 string expression = "Category = @Category AND Key = @Key";
                 DataRow[] rows = dataTable.Select(expression);
 
@@ -281,13 +281,11 @@ namespace Rally
             {
                 command.Parameters.AddWithValue("@Category", category);
                 command.Parameters.AddWithValue("@Key", key);
-                
-                DataRow[] rows = dataTable.Select(
-                    "Category = @Category AND Key = @Key AND Enabled = 1", 
-                    command.Parameters);
+
+                DataRow[] rows = dataTable.Select();
 
                 string[] result = new string[rows.Length];
-                
+
                 for (int i = 0; i < rows.Length; i++)
                 {
                     result[i] = rows[i][3].ToString();
@@ -310,7 +308,7 @@ namespace Rally
             {
                 string decryptedToken = EncryptionService.ReadEncryptedDataFromDatabase(
                     connectionString, app);
-                
+
                 client.DefaultRequestHeaders.Add("Authorization", $"Bearer {decryptedToken}");
                 client.DefaultRequestHeaders.Accept.Add(
                     new MediaTypeWithQualityHeaderValue("application/json"));
@@ -360,7 +358,7 @@ namespace Rally
                 catch (Exception e)
                 {
                     string sanitizedMessage = SanitizeErrorMessage(e.Message);
-                    RallyLoad.logger.Error(sanitizedMessage, 
+                    RallyLoad.logger.Error(sanitizedMessage,
                         $"Retry {currentRetry + 1}/{nbRetry}: Web request failed");
                 }
 
