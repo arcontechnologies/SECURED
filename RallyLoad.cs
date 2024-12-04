@@ -1,3 +1,24 @@
+Severity	Code	Description	Project	File	Line	Suppression State
+Error	CS0103	The name 'LoadDataFromAgile' does not exist in the current context	Rally	D:\Se-DMS\APPS\SECURED\Rally\Rally\Rally\RallyLoad.cs	395	Active
+
+Severity	Code	Description	Project	File	Line	Suppression State
+Error	CS0103	The name 'LoadFeatureException' does not exist in the current context	Rally	D:\Se-DMS\APPS\SECURED\Rally\Rally\Rally\RallyLoad.cs	405	Active
+
+Severity	Code	Description	Project	File	Line	Suppression State
+Error	CS1501	No overload for method 'Select' takes 4 arguments	Rally	D:\Se-DMS\APPS\SECURED\Rally\Rally\Rally\Helpers.cs	195	Active
+
+Severity	Code	Description	Project	File	Line	Suppression State
+Error	CS1501	No overload for method 'Select' takes 4 arguments	Rally	D:\Se-DMS\APPS\SECURED\Rally\Rally\Rally\Helpers.cs	219	Active
+
+Severity	Code	Description	Project	File	Line	Suppression State
+Error	CS0103	The name 'counter' does not exist in the current context	Rally	D:\Se-DMS\APPS\SECURED\Rally\Rally\Rally\RallyLoad.cs	215	Active
+
+
+
+
+
+
+
 using System;
 using System.IO;
 using System.Linq;
