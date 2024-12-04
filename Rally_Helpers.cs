@@ -6,46 +6,37 @@ using System.Data.SqlClient;
 using System.Configuration;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
-using System.Security;
 using DataEncryption;
+using System.Collections.Generic;
+using System.Security.Principal;
+using System.Security;
 
 namespace Rally
 {
     class Helpers
     {
+        // Compare 2 DataTables and output the findings
         public static DataTable GetSQLTable(string dbserver, string database, string TableName)
         {
             DataTable SQLTable = new DataTable();
             try
             {
-                var builder = new SqlConnectionStringBuilder
-                {
-                    DataSource = dbserver,
-                    InitialCatalog = database,
-                    IntegratedSecurity = true
-                };
+                string connString = GetConnectionString(dbserver, database);
+                string query = "SELECT COLUMN_NAME FROM DMAS.INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'" + TableName + "'";
 
-                using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
-                {
-                    using (SqlCommand cmd = new SqlCommand())
-                    {
-                        cmd.Connection = conn;
-                        cmd.CommandType = CommandType.Text;
-                        cmd.Parameters.Add(new SqlParameter("@TableName", SqlDbType.NVarChar, 128) { Value = TableName });
-                        cmd.CommandText = "SELECT COLUMN_NAME FROM DMAS.INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = @TableName";
-                        
-                        conn.Open();
-                        using (SqlDataAdapter da = new SqlDataAdapter(cmd))
-                        {
-                            da.Fill(SQLTable);
-                        }
-                    }
-                }
+                SqlConnection conn = new SqlConnection(connString);
+                SqlCommand cmd = new SqlCommand(query, conn);
+                conn.Open();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(SQLTable);
+                conn.Close();
+                da.Dispose();
             }
             catch (Exception e)
             {
-                RallyLoad.logger.Error("An error occurred in Get SQL Table", e);
+                string sanitizedMessage = e.Message.Replace("\r", "").Replace("\n", "");
+                RallyLoad.logger.Error(sanitizedMessage, "An error occurred");
+
             }
             return SQLTable;
         }
@@ -56,14 +47,17 @@ namespace Rally
             try
             {
                 string[] columnNames = (from dc in datatable.Columns.Cast<DataColumn>()
-                                      select dc.ColumnName).ToArray();
+                                        select dc.ColumnName).ToArray();
+                DataColumn NewCol;
 
-                columntable.Columns.Add(new DataColumn
+                NewCol = new DataColumn
                 {
                     ColumnName = "COLUMN_NAME",
-                    DataType = typeof(string)
-                });
+                    DataType = System.Type.GetType("System.String")
+                };
+                columntable.Columns.Add(NewCol);
 
+                DataRow NewRow = columntable.NewRow();
                 foreach (var str in columnNames)
                 {
                     columntable.Rows.Add(str);
@@ -71,49 +65,42 @@ namespace Rally
             }
             catch (Exception e)
             {
-                RallyLoad.logger.Error("An error occurred in Get AG Table vs AG", e);
+                string sanitizedMessage = e.Message.Replace("\r", "").Replace("\n", "");
+                RallyLoad.logger.Error(sanitizedMessage, "An error occurred");
             }
             return columntable;
         }
 
         public static Tuple<bool, string> GetMappedColumn(string[] MappedConfiguration, string AGColumnName)
         {
-            if (MappedConfiguration == null || string.IsNullOrWhiteSpace(AGColumnName))
-            {
-                return Tuple.Create(false, string.Empty);
-            }
-
             for (int i = 0; i < MappedConfiguration.Length; i++)
             {
-                if (string.IsNullOrWhiteSpace(MappedConfiguration[i])) continue;
-
-                int colonIndex = MappedConfiguration[i].IndexOf(':');
-                if (colonIndex == -1) continue;
-
-                string MappedAGColumn = MappedConfiguration[i].Substring(colonIndex + 1);
-                if (MappedAGColumn.Equals(AGColumnName, StringComparison.OrdinalIgnoreCase))
+                string MappedAGColumn = MappedConfiguration[i].Substring(MappedConfiguration[i].LastIndexOf(':') + 1);
+                if (MappedAGColumn == AGColumnName)
                 {
-                    string MappedSQLColumn = MappedConfiguration[i].Substring(0, colonIndex);
+                    string MappedSQLColumn = MappedConfiguration[i].Substring(0, MappedConfiguration[i].IndexOf(':'));
                     return Tuple.Create(true, MappedSQLColumn);
                 }
             }
-            return Tuple.Create(false, string.Empty);
+            return Tuple.Create(false, "");
         }
 
         public static DataTable CompareRows(DataTable SQLtable, DataTable AGtable, DataTable Resulttable, string[] listmappedcolumn)
         {
             try
             {
+
+                Tuple<bool, string> MappedColumn;
+
                 for (int i = AGtable.Rows.Count - 1; i >= 0; i--)
                 {
                     bool isfound = false;
-                    string CurrentColumnValue = AGtable.Rows[i]["COLUMN_NAME"]?.ToString();
-                    
-                    if (string.IsNullOrEmpty(CurrentColumnValue)) continue;
-
                     foreach (DataRow SQLrow in SQLtable.Rows)
                     {
-                        if (SQLrow.ItemArray.Contains(CurrentColumnValue))
+                        var SQLarray = SQLrow.ItemArray;
+                        string CurrentColumnValue = AGtable.Rows[i]["COLUMN_NAME"].ToString();
+
+                        if (SQLarray.Contains(CurrentColumnValue))
                         {
                             isfound = true;
                             break;
@@ -122,10 +109,13 @@ namespace Rally
 
                     if (!isfound)
                     {
-                        var MappedColumn = GetMappedColumn(listmappedcolumn, CurrentColumnValue);
-                        if (MappedColumn.Item1)
+                        // case where column should be mapped to a new column
+
+                        MappedColumn = GetMappedColumn(listmappedcolumn, AGtable.Rows[i]["COLUMN_NAME"].ToString());
+
+                        if (MappedColumn.Item1 == true)
                         {
-                            Resulttable.Columns[i].ColumnName = MappedColumn.Item2;
+                            Resulttable.Columns[i].ColumnName = MappedColumn.Item2.ToString();
                         }
                         else
                         {
@@ -136,140 +126,127 @@ namespace Rally
             }
             catch (Exception e)
             {
-                RallyLoad.logger.Error("An error occurred in Compare Rows SQL table vs AG", e);
+                string sanitizedMessage = e.Message.Replace("\r", "").Replace("\n", "");
+                RallyLoad.logger.Error(sanitizedMessage, "An error occurred");
             }
             return Resulttable;
         }
 
+        // Connection string to the db Server and related database declacred in app.config
         public static string GetConnectionString(string dbserver, string database)
         {
+            string ConnectionString = string.Empty;
             try
             {
-                var builder = new SqlConnectionStringBuilder
+                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder
                 {
                     DataSource = dbserver,
                     InitialCatalog = database,
                     IntegratedSecurity = true
                 };
-                return builder.ConnectionString;
+                string connString = builder.ConnectionString;
             }
             catch (Exception e)
             {
-                RallyLoad.logger.Error("An error occurred in get connection", e);
-                return string.Empty;
+                string sanitizedMessage = e.Message.Replace("\r", "").Replace("\n", "");
+                RallyLoad.logger.Error(sanitizedMessage, "An error occurred");
             }
+            return ConnectionString;
         }
 
+
+        // method to load configuration data from Configtable declared in app.config
         public static DataTable LoadConfiguration(string dbserver, string database, string configtable)
         {
             DataTable datatable = new DataTable();
+
             try
             {
-                var builder = new SqlConnectionStringBuilder
-                {
-                    DataSource = dbserver,
-                    InitialCatalog = database,
-                    IntegratedSecurity = true
-                };
+                string connString = GetConnectionString(dbserver, database);
+                string query = "select * from " + configtable;
 
-                using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
-                {
-                    using (SqlCommand cmd = new SqlCommand())
-                    {
-                        cmd.Connection = conn;
-                        cmd.CommandType = CommandType.Text;
-                        cmd.Parameters.Add(new SqlParameter("@configtable", SqlDbType.NVarChar, 128) { Value = configtable });
-                        cmd.CommandText = "SELECT * FROM @configtable";
-                        
-                        conn.Open();
-                        using (SqlDataAdapter da = new SqlDataAdapter(cmd))
-                        {
-                            da.Fill(datatable);
-                        }
-                    }
-                }
+                SqlConnection conn = new SqlConnection(connString);
+                SqlCommand cmd = new SqlCommand(query, conn);
+                conn.Open();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(datatable);
+                conn.Close();
+                da.Dispose();
+
             }
             catch (Exception e)
             {
-                RallyLoad.logger.Error("An error occurred in load configuration", e);
+                string sanitizedMessage = e.Message.Replace("\r", "").Replace("\n", "");
+                RallyLoad.logger.Error(sanitizedMessage, "An error occurred");
             }
             return datatable;
         }
 
+
+        // given a Category and a Key, this function returns the related value.
         public static string ReadConfiguration(DataTable datatable, string category, string key)
         {
-            try
-            {
-                var parameters = new List<SqlParameter>
-                {
-                    new SqlParameter("@category", SqlDbType.NVarChar, 50) { Value = category },
-                    new SqlParameter("@key", SqlDbType.NVarChar, 50) { Value = key }
-                };
+            DataRow[] value;
+            string expression = "Category Like '" + category + "' and Key Like '" + key + "'";
 
-                string expression = "Category = @category AND Key = @key";
-                DataRow[] value = datatable.Select(expression);
-                return value.Length > 0 ? value[0][3].ToString() : string.Empty;
-            }
-            catch (Exception e)
-            {
-                RallyLoad.logger.Error("An error occurred in read configuration", e);
-                return string.Empty;
-            }
+            value = datatable.Select(expression);
+            return value[0][3].ToString();
         }
 
+        // given a Category and a Key, this function returns the list of related value but only for those who are enabled.
         public static string[] ReadListConfiguration(DataTable datatable, string category, string key)
         {
+            DataRow[] value;
+
+            value = datatable.Select("Category Like '" + category + "' and Key Like '" + key + "' and Enabled = 1");
+
+            string[] result = new string[value.Length];
+            int i = 0;
+
             try
             {
-                var parameters = new List<SqlParameter>
-                {
-                    new SqlParameter("@category", SqlDbType.NVarChar, 50) { Value = category },
-                    new SqlParameter("@key", SqlDbType.NVarChar, 50) { Value = key }
-                };
 
-                string expression = "Category = @category AND Key = @key AND Enabled = 1";
-                DataRow[] value = datatable.Select(expression);
-
-                string[] result = new string[value.Length];
-                for (int i = 0; i < value.Length; i++)
+                foreach (var dr in value)
                 {
                     result[i] = value[i][3].ToString();
+                    i++;
                 }
-                return result;
             }
             catch (Exception e)
             {
-                RallyLoad.logger.Error("An error occurred in list configuration", e);
-                return Array.Empty<string>();
+                string sanitizedMessage = e.Message.Replace("\r", "").Replace("\n", "");
+                RallyLoad.logger.Error(sanitizedMessage, "An error occurred");
             }
+            return result;
+
         }
 
         public static HttpClient WebAuthenticationWithToken(string connectionString, string app)
         {
-            var handler = new HttpClientHandler
+            HttpClientHandler handler = new HttpClientHandler()
             {
                 SslProtocols = System.Security.Authentication.SslProtocols.Tls12
             };
 
-            var confClient = new HttpClient(handler);
+            HttpClient confClient = new HttpClient(handler);
 
             try
             {
                 string decryptedToken = EncryptionService.ReadEncryptedDataFromDatabase(connectionString, app);
-                if (!string.IsNullOrEmpty(decryptedToken))
-                {
-                    confClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", decryptedToken);
-                    confClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    confClient.Timeout = TimeSpan.FromMilliseconds(100000000);
-                }
+                confClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + decryptedToken);
+                confClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                confClient.Timeout = TimeSpan.FromMilliseconds(100000000);
+
             }
             catch (WebException e)
             {
-                RallyLoad.logger.Error("An error occurred in HTTP request (web exception)", e);
+                string sanitizedMessage = e.Message.Replace("\r", "").Replace("\n", "");
+                RallyLoad.logger.Error(sanitizedMessage, "An error occurred");
             }
             catch (Exception e)
             {
-                RallyLoad.logger.Error("An error occurred in HTTP request (other exception)", e);
+                string sanitizedMessage = e.Message.Replace("\r", "").Replace("\n", "");
+                RallyLoad.logger.Error(sanitizedMessage, "An error occurred");
             }
             return confClient;
         }
@@ -278,50 +255,88 @@ namespace Rally
         {
             string json = string.Empty;
             bool tryagain = true;
-            int nbRetry = Convert.ToInt32(ConfigurationManager.AppSettings["nbRetry"]);
-            int remainingRetries = nbRetry;
+            int nbRetry = Convert.ToInt32(ConfigurationManager.AppSettings["nbRetry"].ToString());
 
-            while (tryagain && remainingRetries > 0)
+            while (tryagain)
             {
                 try
                 {
-                    HttpResponseMessage message = confClient.GetAsync(url).Result;
-
-                    if (message.IsSuccessStatusCode)
+                    if (nbRetry > 0)
                     {
-                        var inter = message.Content.ReadAsStringAsync();
-                        json = inter.Result;
+                        HttpResponseMessage message = confClient.GetAsync(url).Result;
 
-                        if (!string.IsNullOrEmpty(json))
+                        if (message.IsSuccessStatusCode)
                         {
-                            json = json.Replace("\"", @"""");
-                            if (!json.TrimStart().StartsWith("<"))
+                            var inter = message.Content.ReadAsStringAsync();
+                            json = inter.Result;
+
+                            json.Replace("\"", @"""");
+                            if (json.TrimStart().StartsWith("<") == false)
                             {
                                 tryagain = false;
                                 return json;
                             }
                         }
+                        else
+                        {
+                            Console.WriteLine(message.ReasonPhrase);
+                            RallyLoad.logger.Error(message.ReasonPhrase);
+                            nbRetry--;
+                        }
                     }
                     else
                     {
-                        RallyLoad.logger.Error($"HTTP Response error: {message.ReasonPhrase}");
-                        remainingRetries--;
+                        Console.WriteLine("Http Response error - The number of retries has been reached. The program is stopped");
+                        RallyLoad.logger.Error("Http Response error - The number of retries has been reached. The program is stopped");
+                        Environment.Exit(-1);
                     }
                 }
                 catch (Exception e)
                 {
-                    RallyLoad.logger.Error($"HTTP Response error - retry number: {nbRetry - remainingRetries}", e);
-                    remainingRetries--;
+                    if (nbRetry > 0)
+                    {
+                        Console.WriteLine("Http Response error : {0} - retry number : {1}", e.Message, nbRetry);
+                        string sanitizedMessage = e.Message.Replace("\r", "").Replace("\n", "");
+                        RallyLoad.logger.Error(sanitizedMessage, "An error occurred");
+                        nbRetry--;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Http Response error - The number of retries has been reached. The program is stopped");
+                        RallyLoad.logger.Error("Http Response error - The number of retries has been reached. The program is stopped");
+                        Environment.Exit(-1);
+                    }
                 }
             }
-
-            if (remainingRetries <= 0)
-            {
-                RallyLoad.logger.Error("HTTP Response error - The number of retries has been reached. The program is stopped");
-                Environment.Exit(-1);
-            }
-
             return json;
         }
+
+        public static class SecurityValidation
+        {
+            private static readonly HashSet<string> ValidTables = new HashSet<string>
+            {
+                "FEATURE", "USERSTORY", "ITERATION", "RISK", "OPUS", "INITIATIVE"
+            };
+
+            public static string GetSanitizedTableName(string tableName)
+            {
+                string upperTableName = tableName?.ToUpper() ?? throw new ArgumentNullException(nameof(tableName));
+
+                if (!ValidTables.Contains(upperTableName))
+                {
+                    throw new SecurityException($"Invalid table name: {upperTableName}");
+                }
+
+                return $"[MyDB].[TB_STAGING_{upperTableName}]";
+            }
+
+            public static string GetUserContext()
+            {
+                // Implement user context retrieval logic
+                return WindowsIdentity.GetCurrent().Name;
+            }
+        }
+
+
     }
 }
