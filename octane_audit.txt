@@ -1,0 +1,20 @@
+
+Connection String Parameter Pollution	Helpers.cs: 189	SCA	High					
+
+Connection String Parameter Pollution	Helpers.cs: 189	SCA	High					
+
+Log Forging	octane.cs: 79	SCA	High					
+
+Log Forging	Helpers.cs: 240	SCA	High					
+
+Access Control: Database	Helpers.cs: 192	SCA	High					
+
+Connection String Parameter Pollution	Helpers.cs: 1880	SCA	High					
+
+Connection String Parameter Pollution	Helpers.cs: 1880	SCA	High					
+
+Connection String Parameter Pollution	Helpers.cs: 57	SCA	High					
+
+Connection String Parameter Pollution	Helpers.cs: 57	SCA	High					
+
+SQL Injection	Helpers.cs: 59	SCA	High
