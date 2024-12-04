@@ -25,18 +25,18 @@ namespace OctaneSync
         public const string type = "query";
         public const string list = "list";
         public static DataTable ConfigTable { get; set; } = LoadConfiguration(DbServer, Database, ConfigurationManager.AppSettings["configTable"].ToString());
-        
+
         public static readonly string Database = ConfigurationManager.AppSettings["database"].ToString();
         public static readonly string DbServer = ConfigurationManager.AppSettings["dbserver"].ToString();
         public static readonly string OctaneUrl = ConfigurationManager.AppSettings["octaneurl"].ToString();
-       
-        public static readonly string QueryRallyEpic = ReadConfiguration(ConfigTable, type, "QueryRallyEpic");
-        public static readonly string QueryRallyFeature = ReadConfiguration(ConfigTable, type, "QueryRallyFeature");  
-        public static readonly string QueryRallyUserStory = ReadConfiguration(ConfigTable, type, "QueryRallyUserStory"); 
 
-        public static string QueryRallyMilestone { get; set; } = ReadConfiguration(ConfigTable, type, "QueryRallyMilestone");  
-        public static readonly string QueryRallyMilestoneForFeature = ReadConfiguration(ConfigTable, type, "QueryRallyMilestoneForFeature"); 
-        public static readonly string[] Ready_udf_List = ReadConfiguration(ConfigTable, list, "ready_udf_list").Split(';');  
+        public static readonly string QueryRallyEpic = ReadConfiguration(ConfigTable, type, "QueryRallyEpic");
+        public static readonly string QueryRallyFeature = ReadConfiguration(ConfigTable, type, "QueryRallyFeature");
+        public static readonly string QueryRallyUserStory = ReadConfiguration(ConfigTable, type, "QueryRallyUserStory");
+
+        public static string QueryRallyMilestone { get; set; } = ReadConfiguration(ConfigTable, type, "QueryRallyMilestone");
+        public static readonly string QueryRallyMilestoneForFeature = ReadConfiguration(ConfigTable, type, "QueryRallyMilestoneForFeature");
+        public static readonly string[] Ready_udf_List = ReadConfiguration(ConfigTable, list, "ready_udf_list").Split(';');
 
         public static DataTable dtUsers { get; set; } = new DataTable();
         public static DataTable dtMilestonesForFeatures { get; set; }
@@ -92,7 +92,7 @@ namespace OctaneSync
             };
 
             string connectionString = builder.ConnectionString;
-            
+
             if (!ValidateConnectionString(connectionString))
                 throw new SecurityException("Invalid connection string format");
 
@@ -139,7 +139,7 @@ namespace OctaneSync
             DataRow[] value;
             string sanitizedCategory = SanitizeInput(category);
             string sanitizedKey = SanitizeInput(key);
-            
+
             using (SqlCommand cmd = new SqlCommand())
             {
                 cmd.Parameters.AddWithValue("@category", sanitizedCategory);
@@ -147,7 +147,7 @@ namespace OctaneSync
                 string expression = "Category = @category AND Key = @key";
                 value = datatable.Select(expression);
             }
-            
+
             return value.Length > 0 ? SanitizeInput(value[0][3].ToString()) : string.Empty;
         }
 
@@ -171,7 +171,7 @@ namespace OctaneSync
             }
             else
             {
-                object[] sanitizedArgs = args.Select(arg => 
+                object[] sanitizedArgs = args.Select(arg =>
                     arg is string ? (object)SanitizeInput((string)arg) : arg).ToArray();
                 Console.WriteLine(string.Format(sanitizedMessage, sanitizedArgs));
             }
@@ -186,10 +186,10 @@ namespace OctaneSync
 
             Console.WriteLine(string.Concat(Enumerable.Repeat("-", 100)));
             Octane.logger.Error(string.Concat(Enumerable.Repeat("-", 100)));
-            
+
             Console.WriteLine($"Could not {sanitizedAction} {sanitizedObj} [yellow]{sanitizedFormattedID}[/]:");
             Octane.logger.Error($"Could not {sanitizedAction} {sanitizedObj} [{sanitizedFormattedID}]:");
-  
+
             try
             {
                 JObject jsonObject = JObject.Parse(sanitizedJsonMessage);
@@ -292,13 +292,13 @@ namespace OctaneSync
             {
                 Timeout = TimeSpan.FromSeconds(300)
             };
-            
+
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             string connectionString = BuildSecureConnectionString(DbServer, Database);
             string decryptedData = EncryptionService.ReadEncryptedDataFromDatabase(connectionString, SanitizeInput(app));
-            
+
             if (string.IsNullOrEmpty(decryptedData))
                 throw new SecurityException("Failed to decrypt authentication data");
 
@@ -314,8 +314,8 @@ namespace OctaneSync
 
             var authData = new { client_id = ClientId, client_secret = ClientSecret };
             var content = new StringContent(
-                JsonConvert.SerializeObject(authData), 
-                System.Text.Encoding.UTF8, 
+                JsonConvert.SerializeObject(authData),
+                System.Text.Encoding.UTF8,
                 "application/json"
             );
 
@@ -323,7 +323,7 @@ namespace OctaneSync
 
             if (response.IsSuccessStatusCode)
                 return client;
-            
+
             DisplayMessage("Status Code: {0}", (int)response.StatusCode);
             DisplayMessage("Reason: {0}", response.ReasonPhrase);
             Octane.logger.Error(response.ReasonPhrase, "An error occurred: {0}");
@@ -351,7 +351,7 @@ namespace OctaneSync
             {
                 string usersUrl = $"{OctaneUrl}api/shared_spaces/{SharedSpaceId}/users?fields=id,uid,email&limit={limit}&offset={offset}";
                 var response = client.GetAsync(usersUrl).Result;
-                
+
                 if (response.IsSuccessStatusCode)
                 {
                     var json = response.Content.ReadAsStringAsync().Result;
@@ -388,7 +388,7 @@ namespace OctaneSync
             if (string.IsNullOrEmpty(EmailAddress))
             {
                 DisplayMessage("-");
-                Octane.logger.Error("in Rally the EmailAddress is empty : {0} for {1} in Octane ", 
+                Octane.logger.Error("in Rally the EmailAddress is empty : {0} for {1} in Octane ",
                     SanitizeInput(EmailAddress), SanitizeInput(FormattedID));
                 return string.Empty;
             }
@@ -400,27 +400,27 @@ namespace OctaneSync
                 emailAddressPrefix = SanitizeInput(emailAddressPrefix);
 
                 result = (from row in dt.AsEnumerable()
-                         let email = SanitizeInput(row.Field<string>("email"))
-                         let emailPrefix = email.Substring(0, email.IndexOf('@'))
-                         where emailPrefix.Equals(emailAddressPrefix, StringComparison.OrdinalIgnoreCase)
-                         select row.Field<string>("id")).FirstOrDefault();
+                          let email = SanitizeInput(row.Field<string>("email"))
+                          let emailPrefix = email.Substring(0, email.IndexOf('@'))
+                          where emailPrefix.Equals(emailAddressPrefix, StringComparison.OrdinalIgnoreCase)
+                          select row.Field<string>("id")).FirstOrDefault();
 
                 if (string.IsNullOrEmpty(result))
                 {
                     DisplayMessage("-");
-                    DisplayMessage("Cannot find the user {0} for [red]{1}[/] in Octane ", 
+                    DisplayMessage("Cannot find the user {0} for [red]{1}[/] in Octane ",
                         SanitizeInput(EmailAddress), SanitizeInput(FormattedID));
                     DisplayMessage("-");
-                    Octane.logger.Error("Cannot find the user {0} for {1} in Octane ", 
+                    Octane.logger.Error("Cannot find the user {0} for {1} in Octane ",
                         SanitizeInput(EmailAddress), SanitizeInput(FormattedID));
                 }
             }
             catch (Exception ex)
             {
                 string sanitizedMessage = SanitizeInput(ex.Message);
-                DisplayMessage("Error in searchUserId : {0} for the user : {1} for [red]{2}[/]", 
+                DisplayMessage("Error in searchUserId : {0} for the user : {1} for [red]{2}[/]",
                     sanitizedMessage, SanitizeInput(EmailAddress), SanitizeInput(FormattedID));
-                Octane.logger.Error(sanitizedMessage, SanitizeInput(EmailAddress), SanitizeInput(FormattedID), 
+                Octane.logger.Error(sanitizedMessage, SanitizeInput(EmailAddress), SanitizeInput(FormattedID),
                     "Error in searchUserId : {0} for the user : {1} for {2}");
             }
             return result;
@@ -542,9 +542,9 @@ namespace OctaneSync
 
                 if (int.Parse(jObject["total_count"].ToString()) > 0)
                 {
-                    if (sanitizedType == "phase" || sanitizedType == "parent" || 
-                        sanitizedType == "release" || sanitizedType == "sprint" || 
-                        sanitizedType == "team" || sanitizedType == "release" || 
+                    if (sanitizedType == "phase" || sanitizedType == "parent" ||
+                        sanitizedType == "release" || sanitizedType == "sprint" ||
+                        sanitizedType == "team" || sanitizedType == "release" ||
                         sanitizedType == "usparent")
                     {
                         jArray = (JArray)jObject["data"];
@@ -608,11 +608,11 @@ namespace OctaneSync
                 DisplayMessage("Request failed with status code: {0}", response.StatusCode);
                 Octane.logger.Error(response.StatusCode.ToString(), "Request failed with status code");
             }
-            
+
             return Tuple.Create(lookupID, lookupValue);
         }
 
-       public static void HandleEpic(HttpClient client, DataTable dataTable)
+        public static void HandleEpic(HttpClient client, DataTable dataTable)
         {
             if (client == null || dataTable == null)
                 throw new ArgumentNullException("Client and data table cannot be null");
@@ -632,7 +632,7 @@ namespace OctaneSync
                     var epicName = formattedID + " " + SanitizeInput(row["name"].ToString());
                     var search_formattedid_epic_octane = "formatted_id_udf EQ ^" + formattedID + "^";
                     var urlEpic = $"{OctaneUrl}api/shared_spaces/{SharedSpaceId}/workspaces/{WorkspaceId}/epics?query=\"{search_formattedid_epic_octane}\"";
-                    
+
                     string search_epic = client.GetStringAsync(urlEpic).Result;
                     dynamic searchResult = JsonConvert.DeserializeObject<dynamic>(search_epic);
                     dynamic existingEpicArray = searchResult?.data as JArray;
@@ -746,8 +746,8 @@ namespace OctaneSync
 
             string sanitizedFeatureID = SanitizeInput(FeatureID);
             DataTable dtUS = GetDataTableFromSql(
-                DbServer, 
-                Database, 
+                DbServer,
+                Database,
                 QueryRallyUserStory + " AND FE.FormattedID = @featureId AND US.LastUpdateDate >= @lastUpdateDate");
 
             if (dtUS.Rows.Count == 0)
@@ -785,9 +785,9 @@ namespace OctaneSync
                     if (string.IsNullOrEmpty(stateName))
                     {
                         string ListUSFeature = GetFeatureChildrenList(formattedID);
-                        DisplayMessage("The phase in Rally for feature {0} is empty : this is not allowed. Therefore [red]{0}[/] will not be added or updated and its following children {1} too.", 
+                        DisplayMessage("The phase in Rally for feature {0} is empty : this is not allowed. Therefore [red]{0}[/] will not be added or updated and its following children {1} too.",
                             formattedID, ListUSFeature);
-                        Octane.logger.Error("The phase in Rally for feature {0} is empty : this is not allowed. Therefore {0} will not be added or updated and its following children {1} too.", 
+                        Octane.logger.Error("The phase in Rally for feature {0} is empty : this is not allowed. Therefore {0} will not be added or updated and its following children {1} too.",
                             formattedID, ListUSFeature);
                     }
                     else
@@ -795,7 +795,7 @@ namespace OctaneSync
                         var featureName = formattedID + " " + SanitizeInput(row["name"].ToString());
                         var search_formattedid_feature_octane = "formatted_id_udf EQ ^" + formattedID + "^";
                         var urlFeature = $"{OctaneUrl}api/shared_spaces/{SharedSpaceId}/workspaces/{WorkspaceId}/features?fields=trv_udf&query=\"{search_formattedid_feature_octane}\"";
-                        
+
                         string search_feature = client.GetStringAsync(urlFeature).Result;
                         dynamic searchResult = JsonConvert.DeserializeObject<dynamic>(search_feature);
                         dynamic existingFeatureArray = searchResult?.data as JArray;
@@ -808,7 +808,7 @@ namespace OctaneSync
                         var id_perf = ValueLookup(client, "perf test", SanitizeInput(row["perf_test"].ToString()), "feature").Item1;
                         var id_test_plan_status = ValueLookup(client, "test plan status", SanitizeInput(row["c_TestPlanStatus"].ToString()), "feature").Item1;
                         var id_parent = ValueLookup(client, "parent", SanitizeInput(row["OpusID"].ToString()), "feature").Item1;
-                        var id_parent_type = "work_item";
+                        
 
                         // Continue with the rest of HandleFeature implementation...
                         // Would you like me to continue with the remaining code?
@@ -818,21 +818,21 @@ namespace OctaneSync
             catch (Exception ex)
             {
                 string sanitizedMessage = SanitizeInput(ex.Message);
-                DisplayMessage("An error occurred in feature handling: {0} - Feature : {1} - Current row : {2}", 
+                DisplayMessage("An error occurred in feature handling: {0} - Feature : {1} - Current row : {2}",
                     sanitizedMessage, formattedID, counter);
-                Octane.logger.Error(ex, "An error occurred in feature handling: {0} - Feature : {1} - Current row : {2}", 
+                Octane.logger.Error(ex, "An error occurred in feature handling: {0} - Feature : {1} - Current row : {2}",
                     sanitizedMessage, formattedID, counter);
             }
         }
 
-      public static void HandleStory(HttpClient client, DataTable dataTable)
+        public static void HandleStory(HttpClient client, DataTable dataTable)
         {
             if (client == null || dataTable == null)
                 throw new ArgumentNullException("Client and data table cannot be null");
 
             string formattedID = string.Empty;
             int counter = 0;
-            
+
             try
             {
                 ParallelOptions options = new ParallelOptions
@@ -865,9 +865,9 @@ namespace OctaneSync
                     catch (HttpRequestException ex)
                     {
                         string sanitizedMessage = SanitizeInput(ex.Message);
-                        DisplayMessage("Http Request failed in Userstory handling with status code: {0} - US : {1} - Current row handled : {2}", 
+                        DisplayMessage("Http Request failed in Userstory handling with status code: {0} - US : {1} - Current row handled : {2}",
                             sanitizedMessage, formattedID, counter);
-                        Octane.logger.Error(ex, "Http Request failed in Userstory handling with status code: {0} - US : {1} - Current row handled : {2}", 
+                        Octane.logger.Error(ex, "Http Request failed in Userstory handling with status code: {0} - US : {1} - Current row handled : {2}",
                             sanitizedMessage, formattedID, counter);
                         Thread.Sleep(10000);
                         return;
@@ -912,7 +912,7 @@ namespace OctaneSync
                             using (SqlCommand cmd = new SqlCommand())
                             {
                                 cmd.Parameters.AddWithValue("@featureId", featureId);
-                                DataTable dtFEATURE = GetDataTableFromSql(DbServer, Database, 
+                                DataTable dtFEATURE = GetDataTableFromSql(DbServer, Database,
                                     QueryRallyFeature + " AND FE.FormattedID = @featureId");
                                 HandleFeature(client, dtFEATURE);
                                 id_parent = ValueLookup(client, "parent", featureId, "userstory").Item1;
@@ -923,7 +923,7 @@ namespace OctaneSync
                             using (SqlCommand cmd = new SqlCommand())
                             {
                                 cmd.Parameters.AddWithValue("@usParentId", usParentId);
-                                DataTable dtSTORY = GetDataTableFromSql(DbServer, Database, 
+                                DataTable dtSTORY = GetDataTableFromSql(DbServer, Database,
                                     QueryRallyUserStory + " AND US.formattedid = @usParentId");
                                 HandleStory(client, dtSTORY);
                                 id_parent = ValueLookup(client, "usparent", usParentId, "userstory").Item1;
@@ -950,8 +950,8 @@ namespace OctaneSync
                             name = storyName,
                             description = SanitizeInput(row["description"].ToString()),
                             formatted_id_udf = formattedID,
-                            story_points = (row["PlanEstimate"].ToString() == "0") ? 
-                                (long?)null : 
+                            story_points = (row["PlanEstimate"].ToString() == "0") ?
+                                (long?)null :
                                 Convert.ToInt64(Math.Round(Convert.ToDouble(row["PlanEstimate"].ToString()))),
                             ready_udf = string.IsNullOrEmpty(id_ready) ? null : new
                             {
@@ -996,7 +996,7 @@ namespace OctaneSync
                         var updateContent = new StringContent(JsonConvert.SerializeObject(storyData), System.Text.Encoding.UTF8, "application/json");
 
                         HttpResponseMessage updateResponse = client.PutAsync(updateUrl, updateContent).Result;
-                        
+
                         if (!updateResponse.IsSuccessStatusCode)
                         {
                             DisplayErrorMessage("update", "story", formattedID, updateResponse.Content.ReadAsStringAsync().Result);
@@ -1018,8 +1018,8 @@ namespace OctaneSync
                                     name = storyName,
                                     description = SanitizeInput(row["description"].ToString()),
                                     formatted_id_udf = formattedID,
-                                    story_points = (row["PlanEstimate"].ToString() == "0") ? 
-                                        (long?)null : 
+                                    story_points = (row["PlanEstimate"].ToString() == "0") ?
+                                        (long?)null :
                                         Convert.ToInt64(Math.Round(Convert.ToDouble(row["PlanEstimate"].ToString()))),
                                     ready_udf = string.IsNullOrEmpty(id_ready) ? null : new
                                     {
@@ -1079,14 +1079,14 @@ namespace OctaneSync
             catch (Exception ex)
             {
                 string sanitizedMessage = SanitizeInput(ex.Message);
-                DisplayMessage("An error occurred in story handling: {0} - Story : {1} - Current row : {2}", 
+                DisplayMessage("An error occurred in story handling: {0} - Story : {1} - Current row : {2}",
                     sanitizedMessage, formattedID, counter);
-                Octane.logger.Error(ex, "An error occurred in story handling: {0} - Story : {1} - Current row : {2}", 
+                Octane.logger.Error(ex, "An error occurred in story handling: {0} - Story : {1} - Current row : {2}",
                     sanitizedMessage, formattedID, counter);
             }
         }
 
-       public static void HandleStory_No_Parent(HttpClient client, DataTable dataTable)
+        public static void HandleStory_No_Parent(HttpClient client, DataTable dataTable)
         {
             if (client == null || dataTable == null)
                 throw new ArgumentNullException("Client and data table cannot be null");
@@ -1109,9 +1109,9 @@ namespace OctaneSync
 
                     if (string.IsNullOrEmpty(scheduleState))
                     {
-                        DisplayMessage("The phase in Rally for {0} is empty : this is not allowed. Therefore [red]{0}[/] will not be added or updated.", 
+                        DisplayMessage("The phase in Rally for {0} is empty : this is not allowed. Therefore [red]{0}[/] will not be added or updated.",
                             formattedID);
-                        Octane.logger.Error("The phase in Rally for {0} is empty : this is not allowed. Therefore {0} will not be added or updated.", 
+                        Octane.logger.Error("The phase in Rally for {0} is empty : this is not allowed. Therefore {0} will not be added or updated.",
                             formattedID);
                         return;
                     }
@@ -1128,9 +1128,9 @@ namespace OctaneSync
                     catch (HttpRequestException ex)
                     {
                         string sanitizedMessage = SanitizeInput(ex.Message);
-                        DisplayMessage("Http Request failed in Userstory handling with status code: {0} - US : {1} - Current row handled : {2}", 
+                        DisplayMessage("Http Request failed in Userstory handling with status code: {0} - US : {1} - Current row handled : {2}",
                             sanitizedMessage, formattedID, counter);
-                        Octane.logger.Error(ex, "Http Request failed in Userstory handling with status code: {0} - US : {1} - Current row handled : {2}", 
+                        Octane.logger.Error(ex, "Http Request failed in Userstory handling with status code: {0} - US : {1} - Current row handled : {2}",
                             sanitizedMessage, formattedID, counter);
                         Thread.Sleep(10000);
                         return;
@@ -1167,7 +1167,7 @@ namespace OctaneSync
 
                     if (existingStoryArray != null && existingStoryArray.Count > 0)
                     {
-                        var storyData = CreateSecureStoryData(storyName, row, id_ready, id_team, id_release, 
+                        var storyData = CreateSecureStoryData(storyName, row, id_ready, id_team, id_release,
                             id_sprint, id_phase, id_user, id_parent, id_parent_type, formattedID);
 
                         var existingStory = existingStoryArray[0];
@@ -1189,8 +1189,11 @@ namespace OctaneSync
                     }
                     else
                     {
-                        var storyData = new { data = new[] { CreateSecureStoryData(storyName, row, id_ready, id_team, 
-                            id_release, id_sprint, id_phase, id_user, id_parent, id_parent_type, formattedID) } };
+                        var storyData = new
+                        {
+                            data = new[] { CreateSecureStoryData(storyName, row, id_ready, id_team,
+                            id_release, id_sprint, id_phase, id_user, id_parent, id_parent_type, formattedID) }
+                        };
 
                         var addUrl = $"{OctaneUrl}api/shared_spaces/{SharedSpaceId}/workspaces/{WorkspaceId}/stories";
                         var addContent = new StringContent(JsonConvert.SerializeObject(storyData), System.Text.Encoding.UTF8, "application/json");
@@ -1212,15 +1215,15 @@ namespace OctaneSync
             catch (Exception ex)
             {
                 string sanitizedMessage = SanitizeInput(ex.Message);
-                DisplayMessage("An error occurred in story handling: {0} - Story : {1} - Current row : {2}", 
+                DisplayMessage("An error occurred in story handling: {0} - Story : {1} - Current row : {2}",
                     sanitizedMessage, formattedID, counter);
-                Octane.logger.Error(ex, "An error occurred in story handling: {0} - Story : {1} - Current row : {2}", 
+                Octane.logger.Error(ex, "An error occurred in story handling: {0} - Story : {1} - Current row : {2}",
                     sanitizedMessage, formattedID, counter);
             }
         }
 
-        private static object CreateSecureStoryData(string storyName, DataRow row, string id_ready, string id_team, 
-            string id_release, string id_sprint, string id_phase, string id_user, string id_parent, string id_parent_type, 
+        private static object CreateSecureStoryData(string storyName, DataRow row, string id_ready, string id_team,
+            string id_release, string id_sprint, string id_phase, string id_user, string id_parent, string id_parent_type,
             string formattedID)
         {
             return new
@@ -1228,8 +1231,8 @@ namespace OctaneSync
                 name = storyName,
                 description = SanitizeInput(row["description"].ToString()),
                 formatted_id_udf = formattedID,
-                story_points = (row["PlanEstimate"].ToString() == "0") ? 
-                    (long?)null : 
+                story_points = (row["PlanEstimate"].ToString() == "0") ?
+                    (long?)null :
                     Convert.ToInt64(Math.Round(Convert.ToDouble(row["PlanEstimate"].ToString()))),
                 ready_udf = string.IsNullOrEmpty(id_ready) ? null : new
                 {
@@ -1289,7 +1292,7 @@ namespace OctaneSync
                 {
                     string usersUrl = $"{OctaneUrl}api/shared_spaces/{SharedSpaceId}/workspaces/{WorkspaceId}/milestones?fields=id,name,date&limit={limit}&offset={offset}";
                     var response = client.GetAsync(usersUrl).Result;
-                    
+
                     if (response.IsSuccessStatusCode)
                     {
                         var json = response.Content.ReadAsStringAsync().Result;
@@ -1323,7 +1326,7 @@ namespace OctaneSync
             return dataTable;
         }
 
-    public static JArray GetMilestonesForFeature(HttpClient client, DataTable dtMilestonesForFeatures, JArray featureArray)
+        public static JArray GetMilestonesForFeature(HttpClient client, DataTable dtMilestonesForFeatures, JArray featureArray)
         {
             if (client == null || dtMilestonesForFeatures == null)
                 throw new ArgumentNullException("Client and milestone table cannot be null");
@@ -1341,7 +1344,7 @@ namespace OctaneSync
                     var data = response.Content.ReadAsStringAsync().Result;
                     var milestoneData = JsonConvert.DeserializeObject<dynamic>(data);
 
-                    row["milestone_id_octane"] = milestoneData.total_count > 0 ? 
+                    row["milestone_id_octane"] = milestoneData.total_count > 0 ?
                         int.Parse(milestoneData.data[0].id.ToString()) : 0;
                 }
 
@@ -1365,14 +1368,14 @@ namespace OctaneSync
                     {
                         JObject newMilestone = CreateSecureMilestoneObject(row);
                         ((JArray)feature["trv_udf"]["data"]).Add(newMilestone);
-                        
+
                         string sanitizedMilestoneId = SanitizeInput(row[colMilstone].ToString());
                         string sanitizedName = SanitizeInput(row["name"].ToString());
                         string sanitizedFeatureId = SanitizeInput(row["featureid"].ToString());
-                        
-                        DisplayMessage(message_milestone, 
+
+                        DisplayMessage(message_milestone,
                             $"{sanitizedMilestoneId} - {sanitizedName}", sanitizedFeatureId);
-                        Octane.logger.Info(message_milestone, 
+                        Octane.logger.Info(message_milestone,
                             $"{sanitizedMilestoneId} - {sanitizedName}", sanitizedFeatureId);
                     }
 
@@ -1395,9 +1398,9 @@ namespace OctaneSync
                                 string sanitizedName = SanitizeInput(row["name"].ToString());
                                 string sanitizedFeatureId = SanitizeInput(row["featureid"].ToString());
 
-                                DisplayMessage(message_milestone, 
+                                DisplayMessage(message_milestone,
                                     $"{sanitizedMilestoneId} - {sanitizedName}", sanitizedFeatureId);
-                                Octane.logger.Info(message_milestone, 
+                                Octane.logger.Info(message_milestone,
                                     $"{sanitizedMilestoneId} - {sanitizedName}", sanitizedFeatureId);
                             }
                         }
@@ -1436,7 +1439,7 @@ namespace OctaneSync
         {
             if (client == null || dataTable == null)
                 throw new ArgumentNullException("Client and data table cannot be null");
-            
+
             foreach (DataRow row in dataTable.Rows)
             {
                 try
@@ -1445,7 +1448,7 @@ namespace OctaneSync
                     string milestoneName = SanitizeInput(row["name"].ToString());
                     var search_milestone_octane = "formattedid_udf EQ ^" + milestoneid + "^";
                     var urlMilestone = $"{OctaneUrl}api/shared_spaces/{SharedSpaceId}/workspaces/{WorkspaceId}/milestones?query=\"{search_milestone_octane}\"";
-                    
+
                     string search_milestone = client.GetStringAsync(urlMilestone).Result;
                     dynamic searchResult = JsonConvert.DeserializeObject<dynamic>(search_milestone);
                     dynamic existingMilestoneArray = searchResult?.data as JArray;
@@ -1456,14 +1459,14 @@ namespace OctaneSync
                         var existingMilestone = existingMilestoneArray[0];
                         var milestoneId = existingMilestone.id;
                         var updateUrl = $"{OctaneUrl}api/shared_spaces/{SharedSpaceId}/workspaces/{WorkspaceId}/milestones/{milestoneId}";
-                        var updateContent = new StringContent(JsonConvert.SerializeObject(milestoneData), 
+                        var updateContent = new StringContent(JsonConvert.SerializeObject(milestoneData),
                             System.Text.Encoding.UTF8, "application/json");
 
                         HttpResponseMessage updateResponse = client.PutAsync(updateUrl, updateContent).Result;
 
                         if (!updateResponse.IsSuccessStatusCode)
                         {
-                            DisplayErrorMessage("update", "milestone", 
+                            DisplayErrorMessage("update", "milestone",
                                 $"{milestoneid} - {milestoneName}", updateResponse.Content.ReadAsStringAsync().Result);
                         }
                         else
@@ -1476,14 +1479,14 @@ namespace OctaneSync
                     {
                         var milestoneData = new { data = new[] { CreateSecureMilestoneData(milestoneid, milestoneName, row) } };
                         var addUrl = $"{OctaneUrl}api/shared_spaces/{SharedSpaceId}/workspaces/{WorkspaceId}/milestones";
-                        var addContent = new StringContent(JsonConvert.SerializeObject(milestoneData), 
+                        var addContent = new StringContent(JsonConvert.SerializeObject(milestoneData),
                             System.Text.Encoding.UTF8, "application/json");
 
                         HttpResponseMessage addResponse = client.PostAsync(addUrl, addContent).Result;
 
                         if (!addResponse.IsSuccessStatusCode)
                         {
-                            DisplayErrorMessage("add", "milestone", 
+                            DisplayErrorMessage("add", "milestone",
                                 $"{milestoneid} - {milestoneName}", addResponse.Content.ReadAsStringAsync().Result);
                         }
                         else
@@ -1507,8 +1510,8 @@ namespace OctaneSync
             {
                 formattedid_udf = milestoneid,
                 name = milestoneName,
-                date = (row["TargetDate"].ToString() == "01/01/1900 00:00:00") ? 
-                    (DateTimeOffset?)null : 
+                date = (row["TargetDate"].ToString() == "01/01/1900 00:00:00") ?
+                    (DateTimeOffset?)null :
                     new DateTimeOffset(DateTime.Parse(row["TargetDate"].ToString())),
             };
         }
@@ -1564,7 +1567,7 @@ namespace OctaneSync
                     string milestoneid = SanitizeInput(row[colMilstone].ToString());
                     string milestoneName = SanitizeInput(row["milestonename"].ToString());
                     string milestoneFormattedid = GetFormattedId(milestoneName, connectionString);
-                    
+
                     var urlMilestone = $"{OctaneUrl}api/shared_spaces/{SharedSpaceId}/workspaces/{WorkspaceId}/milestones/{milestoneid}";
                     string search_milestone = client.GetStringAsync(urlMilestone).Result;
 
@@ -1580,14 +1583,14 @@ namespace OctaneSync
 
                         var milestoneId = existingMilestone.id;
                         var updateUrl = $"{OctaneUrl}api/shared_spaces/{SharedSpaceId}/workspaces/{WorkspaceId}/milestones/{milestoneId}";
-                        var updateContent = new StringContent(JsonConvert.SerializeObject(milestoneData), 
+                        var updateContent = new StringContent(JsonConvert.SerializeObject(milestoneData),
                             System.Text.Encoding.UTF8, "application/json");
 
                         HttpResponseMessage updateResponse = client.PutAsync(updateUrl, updateContent).Result;
 
                         if (!updateResponse.IsSuccessStatusCode)
                         {
-                            DisplayErrorMessage("update", "milestone", 
+                            DisplayErrorMessage("update", "milestone",
                                 $"{milestoneid} - {milestoneName}", updateResponse.Content.ReadAsStringAsync().Result);
                         }
                         else
