@@ -1,0 +1,115 @@
+Category
+Primary Location
+Analysis Type
+Priority
+Tagged
+
+Connection String Parameter Pollution	RallyLoad.cs: 153	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 153	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 28	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 28	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 352	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 352	SCA	High					
+
+Connection String Parameter Pollution	Helpers.cs: 24	SCA	High					
+
+Connection String Parameter Pollution	Helpers.cs: 24	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 239	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 239	SCA	High					
+
+SQL Injection	Helpers.cs: 156	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 66	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 66	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 981	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 981	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 359	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 372	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 464	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 359	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 372	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 464	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 159	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 189	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 159	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 189	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 66	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 66	SCA	High					
+
+SQL Injection	Helpers.cs: 156	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 568	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 568	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 843	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 843	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 233	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 233	SCA	High					
+
+Connection String Parameter Pollution	Helpers.cs: 155	SCA	High					
+
+Connection String Parameter Pollution	Helpers.cs: 155	SCA	High					
+
+Connection String Parameter Pollution	Helpers.cs: 24	SCA	High					
+
+Connection String Parameter Pollution	Helpers.cs: 24	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 507	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 507	SCA	High					
+
+SQL Injection	Helpers.cs: 156	SCA	High					
+
+Log Forging	Helpers.cs: 266	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 844	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 844	SCA	High					
+
+Access Control: Database	RallyLoad.cs: 209	SCA	High					
+
+Connection String Parameter Pollution	Helpers.cs: 155	SCA	High					
+
+Connection String Parameter Pollution	Helpers.cs: 155	SCA	High					
+
+Connection String Parameter Pollution	Helpers.cs: 155	SCA	High					
+
+Connection String Parameter Pollution	Helpers.cs: 155	SCA	High					
+
+SQL Injection	Helpers.cs: 156	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 896	SCA	High					
+
+Connection String Parameter Pollution	RallyLoad.cs: 896	SCA	High					
+
+Connection String Parameter Pollution	Helpers.cs: 155	SCA	High					
+
+Connection String Parameter Pollution	Helpers.cs: 155	SCA	High					
+
+SQL Injection	Helpers.cs: 156	SCA	High
