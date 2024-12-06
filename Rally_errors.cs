@@ -96,3 +96,60 @@ Rather than relying on the presentation layer to restrict values submitted by th
 
             return json;
         }
+
+====================================================
+RESPONSES
+====================================================
+
+public static DataTable LoadConfiguration(string dbserver, string database, string configTable)
+{
+    DataTable dataTable = new DataTable();
+
+    // Define a whitelist of allowed table names
+    var allowedTables = new HashSet<string>
+    {
+        "AllowedTable1",
+        "AllowedTable2",
+        "AllowedTable3" // Add all allowed table names here
+    };
+
+    // Ensure the table name is in the whitelist
+    if (!allowedTables.Contains(configTable))
+    {
+        throw new ArgumentException("Invalid table name.");
+    }
+
+    // Optionally, map table aliases to actual table names if needed
+    string safeTableName = configTable;
+
+    using (var connection = new SqlConnection(GetConnectionString(dbserver, database)))
+    {
+        try
+        {
+            // Construct the SQL command without using parameters for table names
+            var queryText = $"SELECT * FROM [{safeTableName}]";
+
+            var query = new SqlCommand
+            {
+                Connection = connection,
+                CommandType = CommandType.Text,
+                CommandTimeout = DEFAULT_COMMAND_TIMEOUT,
+                CommandText = queryText
+            };
+
+            connection.Open();
+            using (var adapter = new SqlDataAdapter(query))
+            {
+                adapter.Fill(dataTable);
+            }
+        }
+        catch (Exception e)
+        {
+            string sanitizedMessage = SanitizeErrorMessage(e.Message);
+            RallyLoad.logger.Error(sanitizedMessage, "An error occurred loading configuration");
+            throw;
+        }
+    }
+    return dataTable;
+}
+
