@@ -18,3 +18,7 @@ Global ID (UUID) of an object.
 
 _type
 The type of object, such as HierarchicalRequirement or Discussion.
+
+
+https://eu1.rallydev.com/slm/webservice/v2.0/portfolioitem/feature
+https://eu1.rallydev.com/slm/webservice/v2.0/portfolioitem/feature/<ObjectID>
