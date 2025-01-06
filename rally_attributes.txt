@@ -1,0 +1,20 @@
+Attributes
+API responses have attributes that may be used for processing the elements in the response.
+
+_rallyAPIMajor
+This is the major version of the Web Services API. For example, the rallyAPIMajor of version v2.0 is 2.
+
+_rallyAPIMinor
+This is the minor version of the Web Services API. For example, the rallyAPIMinor of version v2.0 is 0.
+
+_ref
+If the element represents an object, such as a Defect, this will be set to the URL for that object. It is the unique identifier for the object, which is used to update or delete the object.
+
+_refObjectName
+The name of the object.
+
+_refObjectUUID
+Global ID (UUID) of an object.
+
+_type
+The type of object, such as HierarchicalRequirement or Discussion.
