@@ -1,0 +1,322 @@
+---
+swagger: "2.0"
+info:
+  title: "user-management-example"
+  description: "This is an example specification for the Users Management Api."
+  version: "v1.0"
+  contact:
+    name: "Support Team"
+    email: "support@bnpparibasfortis.com"
+    url: "https://www.bnpparibasfortis.com/my-api-docs/v1"
+basePath: "/it/api-name/v1"
+schemes:
+- "https"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+paths:
+  /users:
+    get:
+      summary: "Retrieve all users"
+      description: "Full description of your com.bnppf.tcc.validator.server.core.service\
+        \ functionality"
+      tags:
+      - "Users API - CRUD"
+      operationId: "queryUsers"
+      responses:
+        "200":
+          description: "OK (Successful get all of the Users)"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/User"
+              minItems: 0
+              description: "User information"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "406":
+          $ref: "#/responses/406"
+        "500":
+          $ref: "#/responses/500"
+    post:
+      summary: "Creates a new User resource"
+      description: "Full description of your com.bnppf.tcc.validator.server.core.service\
+        \ functionality"
+      tags:
+      - "Users API - CRUD"
+      operationId: "postUser"
+      parameters:
+      - name: "userDetail"
+        in: "body"
+        description: "new User creation"
+        required: true
+        schema:
+          $ref: "#/definitions/UserDetail"
+      responses:
+        "201":
+          description: "Created (Successful creation of the User)"
+          schema:
+            $ref: "#/definitions/User"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "406":
+          $ref: "#/responses/406"
+        "500":
+          $ref: "#/responses/500"
+  /users/{id}:
+    get:
+      summary: "Read the User information based on the Id"
+      description: "Full description of your com.bnppf.tcc.validator.server.core.service\
+        \ functionality"
+      tags:
+      - "Users API - CRUD"
+      operationId: "queryUser"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Identifier of the User resource"
+        required: true
+        format: "int64"
+        type: "string"
+      responses:
+        "200":
+          description: "OK (Successful get the User information)"
+          schema:
+            $ref: "#/definitions/User"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "406":
+          $ref: "#/responses/406"
+        "500":
+          $ref: "#/responses/500"
+    put:
+      summary: "Updates/replaces an existing User resource"
+      description: "Full description of your com.bnppf.tcc.validator.server.core.service\
+        \ functionality"
+      tags:
+      - "Users API - CRUD"
+      operationId: "putUser"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Identifier of the User resource"
+        required: true
+        format: "int64"
+        type: "string"
+      - name: "userDetail"
+        in: "body"
+        description: "Parameters to update/replace the existing information"
+        required: true
+        schema:
+          $ref: "#/definitions/UserDetail"
+      responses:
+        "200":
+          description: "OK (Successfully updated the existing information)"
+          schema:
+            $ref: "#/definitions/User"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "406":
+          $ref: "#/responses/406"
+        "409":
+          $ref: "#/responses/409"
+        "500":
+          $ref: "#/responses/500"
+    patch:
+      summary: "Updates/replaces an existing User resource"
+      description: "Full description of your com.bnppf.tcc.validator.server.core.service\
+        \ functionality"
+      tags:
+      - "Users API - CRUD"
+      operationId: "updateUser"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Identifier of the User resource"
+        required: true
+        format: "int64"
+        type: "string"
+      - name: "userPatch"
+        in: "body"
+        description: "Parameters to update/replace the existing information"
+        required: true
+        schema:
+          $ref: "#/definitions/UserPatch"
+      responses:
+        "200":
+          description: "OK. The information was modified successfully."
+          schema:
+            $ref: "#/definitions/User"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "406":
+          $ref: "#/responses/406"
+        "500":
+          $ref: "#/responses/500"
+    delete:
+      summary: "Deletes an already existing User"
+      description: "Full description of your com.bnppf.tcc.validator.server.core.service\
+        \ functionality"
+      tags:
+      - "Users API - CRUD"
+      operationId: "deleteUser"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Identifier of the User resource"
+        required: true
+        format: "int64"
+        type: "string"
+      responses:
+        "204":
+          description: "No Content (Successful deletion of the existing User)"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "406":
+          $ref: "#/responses/406"
+        "500":
+          $ref: "#/responses/500"
+definitions:
+  User:
+    allOf:
+    - $ref: "#/definitions/UserDetail"
+    - type: "object"
+      description: "A list of all users with their details"
+      properties:
+        id:
+          description: "The primary identifier of the User object"
+          type: "integer"
+          format: "int64"
+      required:
+      - "id"
+  UserDetail:
+    type: "object"
+    description: "The common data of the User object without a PK"
+    properties:
+      name:
+        description: "The user name"
+        type: "string"
+      title:
+        description: "The user title, Mr. Ms."
+        type: "string"
+      email:
+        description: "The user his e-mail address"
+        type: "string"
+        format: "email"
+      rating:
+        description: "The user rating, between 0 and 5"
+        type: "integer"
+        format: "int64"
+        minimum: 0
+        maximum: 5
+  UserPatch:
+    type: "object"
+    description: "The patch object that holds the data to be updated"
+    properties:
+      title:
+        description: "The user title, Mr. Ms."
+        type: "string"
+      email:
+        description: "The user his e-mail address"
+        type: "string"
+        format: "email"
+  ErrorMessage:
+    type: "object"
+    description: "Generic error report structure."
+    properties:
+      code:
+        type: "string"
+        description: "The internal error code reference."
+      message:
+        type: "string"
+        description: "A human-readable explanation specific to this occurrence of\\\
+          \ \\ the problem."
+      additionalInformation:
+        type: "object"
+        description: "All the properties below are optional and you can always have\\\
+          \ \\ the possibility to ad more if needed. The exceptions property can\\\
+          \ \\ be used to report a set of underlying issues."
+        properties:
+          severity:
+            description: "How severe the error is"
+            type: "string"
+          moreInfo:
+            description: "More additional information to explain the issue"
+            type: "string"
+          exceptions:
+            description: "A list of exception details"
+            type: "array"
+            items:
+              description: "The holder object of the details"
+              type: "object"
+    required:
+    - "code"
+responses:
+  "400":
+    description: "Bad Request"
+    schema:
+      $ref: "#/definitions/ErrorMessage"
+    examples:
+      ERR-BR00:
+        value:
+          code: "ERR-BR00"
+          message: "Business exception"
+  "401":
+    description: "Unauthorized"
+    schema:
+      $ref: "#/definitions/ErrorMessage"
+  "404":
+    description: "Not Found"
+    schema:
+      $ref: "#/definitions/ErrorMessage"
+  "405":
+    description: "Method not allowed"
+    schema:
+      $ref: "#/definitions/ErrorMessage"
+  "406":
+    description: "Not Acceptable"
+    schema:
+      $ref: "#/definitions/ErrorMessage"
+  "409":
+    description: "Conflict"
+    schema:
+      $ref: "#/definitions/ErrorMessage"
+  "500":
+    description: "Internal Server Error"
