@@ -1,0 +1,122 @@
+swagger: "2.0"
+info:
+  title: "Rally Feature API"
+  description: "API specification for Rally Feature endpoints"
+  version: "v2.0"
+  contact:
+    name: "Rally Support Team"
+basePath: "/slm/webservice/v2.0"
+schemes:
+- "https"
+host: "eu1.rallydev.com"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+paths:
+  /portfolioitem/feature:
+    get:
+      summary: "Retrieve all features"
+      description: "Returns a list of all portfolio items of type feature"
+      tags:
+      - "Feature API"
+      operationId: "queryFeatures"
+      responses:
+        "200":
+          description: "OK (Successful retrieval of features)"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Feature"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "500":
+          $ref: "#/responses/500"
+  /portfolioitem/feature/{ObjectID}:
+    get:
+      summary: "Retrieve feature by ID"
+      description: "Returns a specific feature based on its Object ID"
+      tags:
+      - "Feature API"
+      operationId: "queryFeatureById"
+      parameters:
+      - name: "ObjectID"
+        in: "path"
+        description: "Object ID of the feature"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "OK (Successful retrieval of the feature)"
+          schema:
+            $ref: "#/definitions/Feature"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "500":
+          $ref: "#/responses/500"
+definitions:
+  Feature:
+    type: "object"
+    description: "A Rally Feature portfolio item"
+    properties:
+      _rallyAPIMajor:
+        type: "integer"
+        description: "Major version of the Web Services API"
+        example: 2
+      _rallyAPIMinor:
+        type: "integer"
+        description: "Minor version of the Web Services API"
+        example: 0
+      _ref:
+        type: "string"
+        description: "URL identifier for the feature object"
+        example: "https://eu1.rallydev.com/slm/webservice/v2.0/portfolioitem/feature/12345"
+      _refObjectName:
+        type: "string"
+        description: "Name of the feature"
+      _refObjectUUID:
+        type: "string"
+        description: "Global ID (UUID) of the feature"
+        format: "uuid"
+      _type:
+        type: "string"
+        description: "Type of the object"
+        example: "PortfolioItem/Feature"
+responses:
+  "400":
+    description: "Bad Request"
+    schema:
+      $ref: "#/definitions/ErrorMessage"
+  "401":
+    description: "Unauthorized"
+    schema:
+      $ref: "#/definitions/ErrorMessage"
+  "404":
+    description: "Not Found"
+    schema:
+      $ref: "#/definitions/ErrorMessage"
+  "500":
+    description: "Internal Server Error"
+    schema:
+      $ref: "#/definitions/ErrorMessage"
+  ErrorMessage:
+    type: "object"
+    description: "Error response structure"
+    properties:
+      code:
+        type: "string"
+        description: "Error code reference"
+      message:
+        type: "string"
+        description: "Human-readable error message"
+      additionalInformation:
+        type: "object"
+        description: "Additional error details if available"
