@@ -1,47 +1,141 @@
-DETAILS	MUST SHOULD MAY HINT
-MUST	Invalid schema: attribute responses.ErrorMessage.properties is unexpected  Documentation
-MUST	Invalid schema: attribute responses.ErrorMessage.type is unexpected  Documentation
-R03009 - BasePath Integrity »  basePath  @(8:11-8:33)
-MUST	The functional domain in the basePath 'slm' is invalid, you can find a list of the allowed functional domains in the documentation.  Documentation
-MUST	The basePath needs to end with the v[MAJOR] version and be the same as the info.version, /.../.../api-name]vX  Documentation
-R14001 - Error Definition »  definitions  @(65:1-65:12)
-MUST	An ErrorMessage or ErrorModel definition is required.  Documentation
-R11002 - Properties »  definitions.Feature.properties._rallyAPIMajor  @(70:7-70:21)
-MUST	Property 'definitions.Feature.properties._rallyAPIMajor'is not in lowerCamelCase!  Documentation
-R11002 - Properties »  definitions.Feature.properties._rallyAPIMinor  @(74:7-74:21)
-MUST	Property 'definitions.Feature.properties._rallyAPIMinor'is not in lowerCamelCase!  Documentation
-R11002 - Properties »  definitions.Feature.properties._ref  @(78:7-78:11)
-MUST	Property 'definitions.Feature.properties._ref'is not in lowerCamelCase!  Documentation
-R11002 - Properties »  definitions.Feature.properties._refObjectName  @(82:7-82:21)
-MUST	Property 'definitions.Feature.properties._refObjectName'is not in lowerCamelCase!  Documentation
-R11002 - Properties »  definitions.Feature.properties._refObjectUUID  @(85:7-85:21)
-MUST	Property 'definitions.Feature.properties._refObjectUUID'is not in lowerCamelCase!  Documentation
-R11002 - Properties »  definitions.Feature.properties._type  @(89:7-89:12)
-MUST	Property 'definitions.Feature.properties._type'is not in lowerCamelCase!  Documentation
-R01006 - Meta Info »  host  @(11:7-11:25)
-MUST	The 'host' entry is not allowed.  Documentation
-R01009 - Meta Info »  info.contact  @(6:3-6:10)
-MAY	Contact URL could be provided  Documentation
-MAY	Contact e-mail could be provided  Documentation
-R01002 - Meta Info »  info.title  @(3:10-3:29)
-MUST	Title has to be in the kebab-case format  Documentation
-R10001 - HTTP Error Codes »  paths./portfolioitem/feature.GET  @(18:5-18:8)
-MUST	In the 'paths./portfolioitem/feature.GET' operation the error code(s): '405' are missing, Codes [400, 401, 404, 405, 500] are required.  Documentation
-R07003 - Path Integrity »  paths./portfolioitem/feature/{ObjectID}  @(39:3-39:36)
-MUST	Path parameter 'ObjectID' in Path /portfolioitem/feature/{ObjectID} has to be in the lowerCamelCase format.  Documentation
-R10001 - HTTP Error Codes »  paths./portfolioitem/feature/{ObjectID}.GET  @(40:5-40:8)
-MUST	In the 'paths./portfolioitem/feature/{ObjectID}.GET' operation the error code(s): '405' are missing, Codes [400, 401, 404, 405, 500] are required.  Documentation
-R08002 - Parameters »  paths./portfolioitem/feature/{ObjectID}.get.parameters.0.name  @(47:15-47:25)
-MUST	Value of path parameter name 'ObjectID' is not in lowerCamelCase  Documentation
-R05003 - Definitions »  responses.400.schema.$ref  @(97:13-97:41)
-MUST	Reference '#/definitions/ErrorMessage' has no entry in the 'definitions' section.  Documentation
-R05003 - Definitions »  responses.401.schema.$ref  @(101:13-101:41)
-MUST	Reference '#/definitions/ErrorMessage' has no entry in the 'definitions' section.  Documentation
-R05003 - Definitions »  responses.404.schema.$ref  @(105:13-105:41)
-MUST	Reference '#/definitions/ErrorMessage' has no entry in the 'definitions' section.  Documentation
-R05003 - Definitions »  responses.500.schema.$ref  @(109:13-109:41)
-MUST	Reference '#/definitions/ErrorMessage' has no entry in the 'definitions' section.  Documentation
-R06002 - Responses »  responses.ErrorMessage  @(110:3-110:15)
-HINT	Response 'ErrorMessage' has no references and is unused.  Documentation
-R11010 - Properties »  responses.ErrorMessage.properties.additionalInformation  @(120:7-120:28)
-MUST	If a field name is defined with 'type: object' then the 'properties' or 'additionalProperties' keyword is mandatory.
+swagger: "2.0"
+info:
+  title: "rally-feature-api"
+  description: "API specification for Rally Feature endpoints"
+  version: "v1"
+  contact:
+    name: "Rally Support Team"
+    email: "support@rally.com"
+    url: "https://rally.com/docs"
+basePath: "/it/rally-feature-api/v1"
+schemes:
+- "https"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+paths:
+  /portfolioitem/feature:
+    get:
+      summary: "Retrieve all features"
+      description: "Returns a list of all portfolio items of type feature"
+      tags:
+      - "Feature API"
+      operationId: "queryFeatures"
+      responses:
+        "200":
+          description: "OK (Successful retrieval of features)"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Feature"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "500":
+          $ref: "#/responses/500"
+  /portfolioitem/feature/{objectId}:
+    get:
+      summary: "Retrieve feature by ID"
+      description: "Returns a specific feature based on its Object ID"
+      tags:
+      - "Feature API"
+      operationId: "queryFeatureById"
+      parameters:
+      - name: "objectId"
+        in: "path"
+        description: "Object ID of the feature"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "OK (Successful retrieval of the feature)"
+          schema:
+            $ref: "#/definitions/Feature"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "500":
+          $ref: "#/responses/500"
+definitions:
+  Feature:
+    type: "object"
+    description: "A Rally Feature portfolio item"
+    properties:
+      rallyApiMajor:
+        type: "integer"
+        description: "Major version of the Web Services API"
+        example: 2
+      rallyApiMinor:
+        type: "integer"
+        description: "Minor version of the Web Services API"
+        example: 0
+      ref:
+        type: "string"
+        description: "URL identifier for the feature object"
+        example: "https://rally.com/slm/webservice/v2.0/portfolioitem/feature/12345"
+      refObjectName:
+        type: "string"
+        description: "Name of the feature"
+      refObjectUuid:
+        type: "string"
+        description: "Global ID (UUID) of the feature"
+        format: "uuid"
+      type:
+        type: "string"
+        description: "Type of the object"
+        example: "PortfolioItem/Feature"
+  ErrorMessage:
+    type: "object"
+    description: "Error response structure"
+    required:
+      - "code"
+      - "message"
+    properties:
+      code:
+        type: "string"
+        description: "Error code reference"
+      message:
+        type: "string"
+        description: "Human-readable error message"
+      additionalInformation:
+        type: "object"
+        description: "Additional error details if available"
+        properties:
+          severity:
+            type: "string"
+            description: "Error severity level"
+          details:
+            type: "string"
+            description: "Detailed error information"
+responses:
+  "400":
+    description: "Bad Request"
+    schema:
+      $ref: "#/definitions/ErrorMessage"
+  "401":
+    description: "Unauthorized"
+    schema:
+      $ref: "#/definitions/ErrorMessage"
+  "404":
+    description: "Not Found"
+    schema:
+      $ref: "#/definitions/ErrorMessage"
+  "405":
+    description: "Method Not Allowed"
+    schema:
+      $ref: "#/definitions/ErrorMessage"
+  "500":
+    description: "Internal Server Error"
+    schema:
+      $ref: "#/definitions/ErrorMessage"
