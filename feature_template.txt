@@ -1,13 +1,13 @@
 swagger: "2.0"
 info:
   title: "rally-feature-api"
-  description: "API specification for Rally Feature endpoints"
-  version: "v1"
+  description: "API specification for Rally endpoints"
+  version: "v2.0"
   contact:
-    name: "Rally Support Team"
-    email: "support@rally.com"
-    url: "https://rally.com/docs"
-basePath: "/it/rally-feature-api/v1"
+    name: "IT Reporting Team"
+    email: "fbbedtsreporting@bnpparibasfortis.com"
+    url: "https://eu1.rallydev.com"
+basePath: "/it/rally/v2"
 schemes:
 - "https"
 consumes:
@@ -83,7 +83,7 @@ definitions:
       ref:
         type: "string"
         description: "URL identifier for the feature object"
-        example: "https://rally.com/slm/webservice/v2.0/portfolioitem/feature/12345"
+        example: "https://rally.com/slm/webservice/v2.0/portfolioitem/feature/12345678"
       refObjectName:
         type: "string"
         description: "Name of the feature"
@@ -100,7 +100,6 @@ definitions:
     description: "Error response structure"
     required:
       - "code"
-      - "message"
     properties:
       code:
         type: "string"
@@ -115,7 +114,7 @@ definitions:
           severity:
             type: "string"
             description: "Error severity level"
-          details:
+          detail:
             type: "string"
             description: "Detailed error information"
 responses:
@@ -139,3 +138,17 @@ responses:
     description: "Internal Server Error"
     schema:
       $ref: "#/definitions/ErrorMessage"
+
+
+
+https://eu1.rallydev.com/slm/webservice/v2.0/task
+https://eu1.rallydev.com/slm/webservice/v2.0/risk
+https://eu1.rallydev.com/slm/webservice/v2.0/portfolioitem/opus
+https://eu1.rallydev.com/slm/webservice/v2.0/project
+https://eu1.rallydev.com/slm/webservice/v2.0/hierarchicalrequirement
+https://eu1.rallydev.com/slm/webservice/v2.0/user
+https://eu1.rallydev.com/slm/webservice/v2.0/iteration
+https://eu1.rallydev.com/slm/webservice/v2.0/release
+https://eu1.rallydev.com/slm/webservice/v2.0/tag
+https://eu1.rallydev.com/slm/webservice/v2.0/portfolioitem/initiative
+https://eu1.rallydev.com/slm/webservice/v2.0/workspace/65088890229
