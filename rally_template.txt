@@ -1,0 +1,1010 @@
+swagger: "2.0"
+info:
+  title: "rally-api"
+  description: "API specification for Rally endpoints"
+  version: "v2.0"
+  contact:
+    name: "IT Reporting Team"
+    email: "fbbedtsreporting@bnpparibasfortis.com"
+    url: "https://eu1.rallydev.com"
+basePath: "/it/rally/v2"
+schemes:
+- "https"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+paths:
+  /portfolioitem/feature:
+    get:
+      summary: "Retrieve all features"
+      description: "Returns a list of all portfolio items of type feature"
+      tags:
+      - "Feature API"
+      operationId: "queryFeatures"
+      responses:
+        "200":
+          description: "OK (Successful retrieval of features)"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Feature"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "500":
+          $ref: "#/responses/500"
+
+  /portfolioitem/feature/{objectId}:
+    get:
+      summary: "Retrieve feature by ID"
+      description: "Returns a specific feature based on its Object ID"
+      tags:
+      - "Feature API"
+      operationId: "queryFeatureById"
+      parameters:
+      - name: "objectId"
+        in: "path"
+        description: "Object ID of the feature"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "OK (Successful retrieval of the feature)"
+          schema:
+            $ref: "#/definitions/Feature"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "500":
+          $ref: "#/responses/500"
+
+  /task:
+    get:
+      summary: "Retrieve all tasks"
+      description: "Returns a list of all tasks"
+      tags:
+      - "Task API"
+      operationId: "queryTasks"
+      responses:
+        "200":
+          description: "OK (Successful retrieval of tasks)"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Task"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "500":
+          $ref: "#/responses/500"
+
+  /task/{objectId}:
+    get:
+      summary: "Retrieve task by ID"
+      description: "Returns a specific task based on its Object ID"
+      tags:
+      - "Task API"
+      operationId: "queryTaskById"
+      parameters:
+      - name: "objectId"
+        in: "path"
+        description: "Object ID of the task"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "OK (Successful retrieval of the task)"
+          schema:
+            $ref: "#/definitions/Task"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "500":
+          $ref: "#/responses/500"
+
+  /risk:
+    get:
+      summary: "Retrieve all risks"
+      description: "Returns a list of all risks"
+      tags:
+      - "Risk API"
+      operationId: "queryRisks"
+      responses:
+        "200":
+          description: "OK (Successful retrieval of risks)"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Risk"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "500":
+          $ref: "#/responses/500"
+
+  /risk/{objectId}:
+    get:
+      summary: "Retrieve risk by ID"
+      description: "Returns a specific risk based on its Object ID"
+      tags:
+      - "Risk API"
+      operationId: "queryRiskById"
+      parameters:
+      - name: "objectId"
+        in: "path"
+        description: "Object ID of the risk"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "OK (Successful retrieval of the risk)"
+          schema:
+            $ref: "#/definitions/Risk"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "500":
+          $ref: "#/responses/500"
+
+  /portfolioitem/opus:
+    get:
+      summary: "Retrieve all opus items"
+      description: "Returns a list of all portfolio items of type opus"
+      tags:
+      - "Opus API"
+      operationId: "queryOpusItems"
+      responses:
+        "200":
+          description: "OK (Successful retrieval of opus items)"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Opus"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "500":
+          $ref: "#/responses/500"
+
+  /portfolioitem/opus/{objectId}:
+    get:
+      summary: "Retrieve opus item by ID"
+      description: "Returns a specific opus item based on its Object ID"
+      tags:
+      - "Opus API"
+      operationId: "queryOpusById"
+      parameters:
+      - name: "objectId"
+        in: "path"
+        description: "Object ID of the opus item"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "OK (Successful retrieval of the opus item)"
+          schema:
+            $ref: "#/definitions/Opus"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "500":
+          $ref: "#/responses/500"
+
+  /project:
+    get:
+      summary: "Retrieve all projects"
+      description: "Returns a list of all projects"
+      tags:
+      - "Project API"
+      operationId: "queryProjects"
+      responses:
+        "200":
+          description: "OK (Successful retrieval of projects)"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Project"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "500":
+          $ref: "#/responses/500"
+
+  /project/{objectId}:
+    get:
+      summary: "Retrieve project by ID"
+      description: "Returns a specific project based on its Object ID"
+      tags:
+      - "Project API"
+      operationId: "queryProjectById"
+      parameters:
+      - name: "objectId"
+        in: "path"
+        description: "Object ID of the project"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "OK (Successful retrieval of the project)"
+          schema:
+            $ref: "#/definitions/Project"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "500":
+          $ref: "#/responses/500"
+
+  /hierarchicalrequirement:
+    get:
+      summary: "Retrieve all user stories"
+      description: "Returns a list of all hierarchical requirements (user stories)"
+      tags:
+      - "User Story API"
+      operationId: "queryUserStories"
+      responses:
+        "200":
+          description: "OK (Successful retrieval of user stories)"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/UserStory"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "500":
+          $ref: "#/responses/500"
+
+  /hierarchicalrequirement/{objectId}:
+    get:
+      summary: "Retrieve user story by ID"
+      description: "Returns a specific user story based on its Object ID"
+      tags:
+      - "User Story API"
+      operationId: "queryUserStoryById"
+      parameters:
+      - name: "objectId"
+        in: "path"
+        description: "Object ID of the user story"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "OK (Successful retrieval of the user story)"
+          schema:
+            $ref: "#/definitions/UserStory"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "500":
+          $ref: "#/responses/500"
+
+  /user:
+    get:
+      summary: "Retrieve all users"
+      description: "Returns a list of all users"
+      tags:
+      - "User API"
+      operationId: "queryUsers"
+      responses:
+        "200":
+          description: "OK (Successful retrieval of users)"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/User"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "500":
+          $ref: "#/responses/500"
+
+  /user/{objectId}:
+    get:
+      summary: "Retrieve user by ID"
+      description: "Returns a specific user based on its Object ID"
+      tags:
+      - "User API"
+      operationId: "queryUserById"
+      parameters:
+      - name: "objectId"
+        in: "path"
+        description: "Object ID of the user"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "OK (Successful retrieval of the user)"
+          schema:
+            $ref: "#/definitions/User"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "500":
+          $ref: "#/responses/500"
+
+  /iteration:
+    get:
+      summary: "Retrieve all iterations"
+      description: "Returns a list of all iterations"
+      tags:
+      - "Iteration API"
+      operationId: "queryIterations"
+      responses:
+        "200":
+          description: "OK (Successful retrieval of iterations)"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Iteration"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "500":
+          $ref: "#/responses/500"
+
+  /iteration/{objectId}:
+    get:
+      summary: "Retrieve iteration by ID"
+      description: "Returns a specific iteration based on its Object ID"
+      tags:
+      - "Iteration API"
+      operationId: "queryIterationById"
+      parameters:
+      - name: "objectId"
+        in: "path"
+        description: "Object ID of the iteration"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "OK (Successful retrieval of the iteration)"
+          schema:
+            $ref: "#/definitions/Iteration"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "500":
+          $ref: "#/responses/500"
+
+  /release:
+    get:
+      summary: "Retrieve all releases"
+      description: "Returns a list of all releases"
+      tags:
+      - "Release API"
+      operationId: "queryReleases"
+      responses:
+        "200":
+          description: "OK (Successful retrieval of releases)"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Release"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "500":
+          $ref: "#/responses/500"
+
+  /release/{objectId}:
+    get:
+      summary: "Retrieve release by ID"
+      description: "Returns a specific release based on its Object ID"
+      tags:
+      - "Release API"
+      operationId: "queryReleaseById"
+      parameters:
+      - name: "objectId"
+        in: "path"
+        description: "Object ID of the release"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "OK (Successful retrieval of the release)"
+          schema:
+            $ref: "#/definitions/Release"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "500":
+          $ref: "#/responses/500"
+
+  /tag:
+    get:
+      summary: "Retrieve all tags"
+      description: "Returns a list of all tags"
+      tags:
+      - "Tag API"
+      operationId: "queryTags"
+      responses:
+        "200":
+          description: "OK (Successful retrieval of tags)"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Tag"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "500":
+          $ref: "#/responses/500"
+
+  /tag/{objectId}:
+    get:
+      summary: "Retrieve tag by ID"
+      description: "Returns a specific tag based on its Object ID"
+      tags:
+      - "Tag API"
+      operationId: "queryTagById"
+      parameters:
+      - name: "objectId"
+        in: "path"
+        description: "Object ID of the tag"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "OK (Successful retrieval of the tag)"
+          schema:
+            $ref: "#/definitions/Tag"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "500":
+          $ref: "#/responses/500"
+
+  /portfolioitem/initiative:
+    get:
+      summary: "Retrieve all initiatives"
+      description: "Returns a list of all portfolio items of type initiative"
+      tags:
+      - "Initiative API"
+      operationId: "queryInitiatives"
+      responses:
+        "200":
+          description: "OK (Successful retrieval of initiatives)"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Initiative"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "500":
+          $ref: "#/responses/500"
+
+  /portfolioitem/initiative/{objectId}:
+    get:
+      summary: "Retrieve initiative by ID"
+      description: "Returns a specific initiative based on its Object ID"
+      tags:
+      - "Initiative API"
+      operationId: "queryInitiativeById"
+      parameters:
+      - name: "objectId"
+        in: "path"
+        description: "Object ID of the initiative"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "OK (Successful retrieval of the initiative)"
+          schema:
+            $ref: "#/definitions/Initiative"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "500":
+          $ref: "#/responses/500"
+
+  /workspace/{objectId}:
+    get:
+      summary: "Retrieve workspace by ID"
+      description: "Returns a specific workspace based on its Object ID"
+      tags:
+      - "Workspace API"
+      operationId: "queryWorkspaceById"
+      parameters:
+      - name: "objectId"
+        in: "path"
+        description: "Object ID of the workspace"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "OK (Successful retrieval of the workspace)"
+          schema:
+            $ref: "#/definitions/Workspace"
+        "400":
+          $ref: "#/responses/400"
+        "401":
+          $ref: "#/responses/401"
+        "404":
+          $ref: "#/responses/404"
+        "405":
+          $ref: "#/responses/405"
+        "500":
+          $ref: "#/responses/500"
+
+definitions:
+  Feature:
+    type: "object"
+    description: "A Rally Feature portfolio item"
+    properties:
+      rallyApiMajor:
+        type: "integer"
+        description: "Major version of the Web Services API"
+        example: 2
+      rallyApiMinor:
+        type: "integer"
+        description: "Minor version of the Web Services API"
+        example: 0
+      ref:
+        type: "string"
+        description: "URL identifier for the feature object"
+        example: "https://rally.com/slm/webservice/v2.0/portfolioitem/feature/12345678"
+      refObjectName:
+        type: "string"
+        description: "Name of the feature"
+      refObjectUuid:
+        type: "string"
+        description: "Global ID (UUID) of the feature"
+        format: "uuid"
+      type:
+        type: "string"
+        description: "Type of the object"
+        example: "PortfolioItem/Feature"
+
+  Task:
+    type: "object"
+    description: "A Rally Task"
+    properties:
+      rallyApiMajor:
+        type: "integer"
+        description: "Major version of the Web Services API"
+        example: 2
+      rallyApiMinor:
+        type: "integer"
+        description: "Minor version of the Web Services API"
+        example: 0
+      ref:
+        type: "string"
+        description: "URL identifier for the task object"
+      refObjectName:
+        type: "string"
+        description: "Name of the task"
+      refObjectUuid:
+        type: "string"
+        description: "Global ID (UUID) of the task"
+        format: "uuid"
+      type:
+        type: "string"
+        description: "Type of the object"
+        example: "Task"
+
+  Risk:
+    type: "object"
+    description: "A Rally Risk"
+    properties:
+      rallyApiMajor:
+        type: "integer"
+        description: "Major version of the Web Services API"
+        example: 2
+      rallyApiMinor:
+        type: "integer"
+        description: "Minor version of the Web Services API"
+        example: 0
+      ref:
+        type: "string"
+        description: "URL identifier for the risk object"
+      refObjectName:
+        type: "string"
+        description: "Name of the risk"
+      refObjectUuid:
+        type: "string"
+        description: "Global ID (UUID) of the risk"
+        format: "uuid"
+      type:
+        type: "string"
+        description: "Type of the object"
+        example: "Risk"
+
+  Opus:
+    type: "object"
+    description: "A Rally Opus portfolio item"
+    properties:
+      rallyApiMajor:
+        type: "integer"
+        description: "Major version of the Web Services API"
+        example: 2
+      rallyApiMinor:
+        type: "integer"
+        description: "Minor version of the Web Services API"
+        example: 0
+      ref:
+        type: "string"
+        description: "URL identifier for the opus object"
+      refObjectName:
+        type: "string"
+        description: "Name of the opus"
+      refObjectUuid:
+        type: "string"
+        description: "Global ID (UUID) of the opus"
+        format: "uuid"
+      type:
+        type: "string"
+        description: "Type of the object"
+        example: "PortfolioItem/Opus"
+
+  Project:
+    type: "object"
+    description: "A Rally Project"
+    properties:
+      rallyApiMajor:
+        type: "integer"
+        description: "Major version of the Web Services API"
+        example: 2
+      rallyApiMinor:
+        type: "integer"
+        description: "Minor version of the Web Services API"
+        example: 0
+      ref:
+        type: "string"
+        description: "URL identifier for the project object"
+      refObjectName:
+        type: "string"
+        description: "Name of the project"
+      refObjectUuid:
+        type: "string"
+        description: "Global ID (UUID) of the project"
+        format: "uuid"
+      type:
+        type: "string"
+        description: "Type of the object"
+        example: "Project"
+
+  UserStory:
+    type: "object"
+    description: "A Rally User Story (Hierarchical Requirement)"
+    properties:
+      rallyApiMajor:
+        type: "integer"
+        description: "Major version of the Web Services API"
+        example: 2
+      rallyApiMinor:
+        type: "integer"
+        description: "Minor version of the Web Services API"
+        example: 0
+      ref:
+        type: "string"
+        description: "URL identifier for the user story object"
+      refObjectName:
+        type: "string"
+        description: "Name of the user story"
+      refObjectUuid:
+        type: "string"
+        description: "Global ID (UUID) of the user story"
+        format: "uuid"
+      type:
+        type: "string"
+        description: "Type of the object"
+        example: "HierarchicalRequirement"
+
+  User:
+    type: "object"
+    description: "A Rally User"
+    properties:
+      rallyApiMajor:
+        type: "integer"
+        description: "Major version of the Web Services API"
+        example: 2
+      rallyApiMinor:
+        type: "integer"
+        description: "Minor version of the Web Services API"
+        example: 0
+      ref:
+        type: "string"
+        description: "URL identifier for the user object"
+      refObjectName:
+        type: "string"
+        description: "Name of the user"
+      refObjectUuid:
+        type: "string"
+        description: "Global ID (UUID) of the user"
+        format: "uuid"
+      type:
+        type: "string"
+        description: "Type of the object"
+        example: "User"
+
+  Iteration:
+    type: "object"
+    description: "A Rally Iteration"
+    properties:
+      rallyApiMajor:
+        type: "integer"
+        description: "Major version of the Web Services API"
+        example: 2
+      rallyApiMinor:
+        type: "integer"
+        description: "Minor version of the Web Services API"
+        example: 0
+      ref:
+        type: "string"
+        description: "URL identifier for the iteration object"
+      refObjectName:
+        type: "string"
+        description: "Name of the iteration"
+      refObjectUuid:
+        type: "string"
+        description: "Global ID (UUID) of the iteration"
+        format: "uuid"
+      type:
+        type: "string"
+        description: "Type of the object"
+        example: "Iteration"
+
+  Release:
+    type: "object"
+    description: "A Rally Release"
+    properties:
+      rallyApiMajor:
+        type: "integer"
+        description: "Major version of the Web Services API"
+        example: 2
+      rallyApiMinor:
+        type: "integer"
+        description: "Minor version of the Web Services API"
+        example: 0
+      ref:
+        type: "string"
+        description: "URL identifier for the release object"
+      refObjectName:
+        type: "string"
+        description: "Name of the release"
+      refObjectUuid:
+        type: "string"
+        description: "Global ID (UUID) of the release"
+        format: "uuid"
+      type:
+        type: "string"
+        description: "Type of the object"
+        example: "Release"
+
+  Tag:
+    type: "object"
+    description: "A Rally Tag"
+    properties:
+      rallyApiMajor:
+        type: "integer"
+        description: "Major version of the Web Services API"
+        example: 2
+      rallyApiMinor:
+        type: "integer"
+        description: "Minor version of the Web Services API"
+        example: 0
+      ref:
+        type: "string"
+        description: "URL identifier for the tag object"
+      refObjectName:
+        type: "string"
+        description: "Name of the tag"
+      refObjectUuid:
+        type: "string"
+        description: "Global ID (UUID) of the tag"
+        format: "uuid"
+      type:
+        type: "string"
+        description: "Type of the object"
+        example: "Tag"
+
+  Initiative:
+    type: "object"
+    description: "A Rally Initiative portfolio item"
+    properties:
+      rallyApiMajor:
+        type: "integer"
+        description: "Major version of the Web Services API"
+        example: 2
+      rallyApiMinor:
+        type: "integer"
+        description: "Minor version of the Web Services API"
+        example: 0
+      ref:
+        type: "string"
+        description: "URL identifier for the initiative object"
+      refObjectName:
+        type: "string"
+        description: "Name of the initiative"
+      refObjectUuid:
+        type: "string"
+        description: "Global ID (UUID) of the initiative"
+        format: "uuid"
+      type:
+        type: "string"
+        description: "Type of the object"
+        example: "PortfolioItem/Initiative"
+
+  Workspace:
+    type: "object"
+    description: "A Rally Workspace"
+    properties:
+      rallyApiMajor:
+        type: "integer"
+        description: "Major version of the Web Services API"
+        example: 2
+      rallyApiMinor:
+        type: "integer"
+        description: "Minor version of the Web Services API"
+        example: 0
+      ref:
+        type: "string"
+        description: "URL identifier for the workspace object"
+      refObjectName:
+        type: "string"
+        description: "Name of the workspace"
+      refObjectUuid:
+        type: "string"
+        description: "Global ID (UUID) of the workspace"
+        format: "uuid"
+      type:
+        type: "string"
+        description: "Type of the object"
+        example: "Workspace"
+
+  ErrorMessage:
+    type: "object"
+    description: "Error response structure"
+    required:
+      - "code"
+    properties:
+      code:
+        type: "string"
+        description: "Error code reference"
+      message:
+        type: "string"
+        description: "Human-readable error message"
+      additionalInformation:
+        type: "object"
+        description: "Additional error details if available"
+        properties:
+          severity:
+            type: "string"
+            description: "Error severity level"
+          detail:
+            type: "string"
+            description: "Detailed error information"
+
+responses:
+  "400":
+    description: "Bad Request"
+    schema:
+      $ref: "#/definitions/ErrorMessage"
+  "401":
+    description: "Unauthorized"
+    schema:
+      $ref: "#/definitions/ErrorMessage"
+  "404":
+    description: "Not Found"
+    schema:
+      $ref: "#/definitions/ErrorMessage"
+  "405":
+    description: "Method Not Allowed"
+    schema:
+      $ref: "#/definitions/ErrorMessage"
+  "500":
+    description: "Internal Server Error"
+    schema:
+      $ref: "#/definitions/ErrorMessage"
